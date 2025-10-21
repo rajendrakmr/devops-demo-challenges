@@ -1,0 +1,31 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: canary-deploy-v2
+  namespace: canary-ns
+
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: httpd
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: httpd
+        version: v2
+    spec:
+      containers:
+        - name: httpd-container
+          image: httpd
+          ports:
+            - containerPort: 80
+
+          resources:
+            requests:
+              cpu: 128m
+              memory: 200Mi
+            limits:
+              cpu: 256m
+              memory: 400Mi
