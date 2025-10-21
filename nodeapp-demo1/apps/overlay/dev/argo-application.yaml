@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nodeapp-dev
+  namespace: argocd
+spec:
+  project: default
+
+  # Git repository containing manifests
+  source:
+    repoURL: https://github.com/yourusername/nodeapp-demo1.git
+    targetRevision: main
+    path: apps/overlays/dev
+
+  # Destination cluster & namespace
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+
+  # Automated sync (auto deploy)
+  syncPolicy:
+    automated:
+      prune: true          # Delete resources removed from Git
+      selfHeal: true       # Correct drift automatically
+
+  # Optional: retry settings
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
